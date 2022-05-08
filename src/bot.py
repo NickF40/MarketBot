@@ -91,7 +91,7 @@ def handle_fast(message):
             telebot.types.InlineKeyboardButton('Перейти', callback_data='retrieve'))
         try:
             url = item.url
-            photo = open("temp.jpg", 'w')  # u"Инициализация файла"
+            photo = open("temp.jpg", 'w')
             photo.close()
             photo = open("temp.jpg", 'rb')
             urllib.urlretrieve(url, "temp.jpg")
@@ -236,7 +236,7 @@ def handle_add_item_type(call):
     new_item = temp.Item()
     const.new_items_user_adding.update([(call.message.chat.id, new_item)])
     sent = bot.send_message(call.message.chat.id, "Выберите тип товара:", reply_markup=markups.add_item())
-    bot.register_next_step_handler(sent, base.add_item_kategory)
+    bot.register_next_step_handler(sent, base.add_item_category)
     const.user_adding_item_step.update([(call.message.chat.id, "Enter name")])
 
 
@@ -344,7 +344,9 @@ def bank(message):
         bot.send_message(message.chat.id, 'Выберите кнопку.', parse_mode='HTML', reply_markup=markup_start)
 
 
-# Запуск бота
+# stupid disgusting while true loop
+# I was writing this when I was a highschooler
+# lord forgive me for my sins
 while True:
     try:
         bot.polling(none_stop=True, interval=0)

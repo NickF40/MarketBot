@@ -1,4 +1,5 @@
 token = ''
+DB_PATH = '../clientbase.db'
 
 # Приветственное сообщение
 welcome_celler = 'Привет селлер, что будем делать?'

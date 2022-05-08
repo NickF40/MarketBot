@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*- 
 import sqlite3 as sqlite
 import config, const, temp
 
 
 def give_menu():
-    db = sqlite.connect('clientbase.db')
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute("SELECT name FROM categories")
     temp_items = cur.fetchall()
@@ -14,8 +13,8 @@ def give_menu():
     return categories
 
 
-def defineType(item_type):
-    db = sqlite.connect("clientbase.db")
+def define_type(item_type):
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute("SELECT * id FROM categories WHERE name = ?", (item_type,))
     type1 = cur.fetchone()
@@ -23,37 +22,35 @@ def defineType(item_type):
 
 
 def type_finder(item_type):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute("SELECT id FROM items WHERE type = ?", (item_type,))
     temp_items = cur.fetchall()
-    print(temp_items)
     items = []
     for item in temp_items:
         items.append(item_finder(item[0]))
-    print(items)
     return items
-    
-def get_users():   
-   db = sqlite.connect("clientbase.db")
-   cur = db.cursor()
-   cur.execute("SELECT user_id FROM users")
-   return cur.fetchall()
+
+
+def get_users():
+    db = sqlite.connect(const.DB_PATH)
+    cur = db.cursor()
+    cur.execute("SELECT user_id FROM users")
+    return cur.fetchall()
 
 
 def item_finder(item_id):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute("SELECT * FROM items WHERE id = ?", (str(item_id),))
     item = temp.Item()
     item.set_full_data(*cur.fetchone())
-    print("\n\n\n")
     print(item.get_data())
     return item
 
 
 def is_seller(user_id):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute('SELECT user_id FROM clients WHERE user_id = (?)', (str(user_id),))
     if cur.fetchone():
@@ -63,7 +60,7 @@ def is_seller(user_id):
 
 
 def add_user(message):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     try:
         cur.execute("SELECT * FROM users WHERE user_id = (?)", (message.from_user.id,))
@@ -89,7 +86,7 @@ def add_user(message):
 
 
 def add_client(message):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     login = message.text[1:]
     try:
@@ -112,7 +109,7 @@ def add_client(message):
 
 
 def add_item(item, user):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute("SELECT * FROM items WHERE (name) = (?)", (item.description,))
     print(cur.fetchone())
@@ -133,7 +130,7 @@ def add_item(item, user):
 
 
 def add_kat(message):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute("SELECT * FROM categories WHERE (name) = (?)", (message.text,))
     if not cur.fetchone():
@@ -155,7 +152,7 @@ def get_user_step(user_id):
         return False
 
 
-def add_item_kategory(message):
+def add_item_category(message):
     if message.text in give_menu():
         new_item = const.new_items_user_adding[message.chat.id]
         new_item.type = message.text
@@ -169,7 +166,7 @@ def add_item_description(message):
 
 
 def find_users_items(user_id):
-    db = sqlite.connect("clientbase.db")
+    db = sqlite.connect(const.DB_PATH)
     cur = db.cursor()
     cur.execute("SELECT * FROM items WHERE hash = ?", (str(user_id),))
     result = cur.fetchall()
